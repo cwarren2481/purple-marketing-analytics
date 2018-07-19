@@ -1,4 +1,4 @@
-view: customer_journey_1 {
+view: customer_journey {
   derived_table: {
     sql: select a.event_id, a.user_id, a.session_id, a.device_type,a.referrer, a.utm_source,a.utm_campaign,a.utm_medium, a.path, b.session_time as order_date, c.EVENT_TABLE_NAME as EVENT_NAME, b.region, b.dollars from HEAP.PAGEVIEWS a
       left join HEAP.PURCHASE b on a.USER_ID = b.USER_ID
