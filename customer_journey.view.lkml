@@ -5,7 +5,7 @@ view: customer_journey {
       left join HEAP.ALL_EVENTS c on a.EVENT_ID = c.EVENT_ID
       where a.time <= b.session_time
       and a.time >= '2018-01-01'
-      order by USER_ID,a.session_time desc;
+      order by USER_ID,a.session_time desc
        ;;
   }
 
