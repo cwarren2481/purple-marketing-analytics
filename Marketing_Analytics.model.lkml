@@ -10,5 +10,9 @@ datagroup: marketing_analytics_default_datagroup {
 
 explore: customer_journey {
   label: "Customer Journey"
+  description: "Customery Journey"
+}
+explore: roi_daily {
+  label: "ROI Daily"
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
 }
