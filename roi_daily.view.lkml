@@ -57,7 +57,7 @@ view: roi_daily {
         case when days_diff <= 7 then 1 else 0 end,
         case when days_diff <= 1 then 1 else 0 end)
       -- SAMPLE GROUPING BY PLATFORM
-      select * from dai;
+      select * from dai
 
       -- ************************************************************************************
       -- ********** /END OF Customer Journey / ROI Dataset *************************************
