@@ -42,7 +42,7 @@ view: ROI {
         group by date, platform, campaign_name, source),
       dai as (
         -- MAIN QUERY daily metrics by platform (set attribution window here)
-        select date, platform,campaign_name, source, spend, impressions, clicks
+        select date, platform,campaign_name, source, spend, impressions, clicks, dollars as revenue
             , count(distinct order_event_id) orders,
         case when days_diff <= 30 then 1 else 0 end as thirty_day,
         case when days_diff <= 60 then 1 else 0 end as sixty_day,
