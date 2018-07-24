@@ -12,7 +12,7 @@ explore: customer_journey {
   label: "Customer Journey"
   description: "Customery Journey"
 }
-explore: roi_daily {
-  label: "ROI Daily"
+explore: ROI {
+  label: "ROI"
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
 }
