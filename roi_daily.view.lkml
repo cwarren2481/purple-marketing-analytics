@@ -90,23 +90,23 @@ view: roi_daily {
     sql: ${TABLE}."SOURCE" ;;
   }
 
-  dimension: spend {
-    type: number
+  measure: spend {
+    type: sum
     sql: ${TABLE}."SPEND" ;;
   }
 
-  dimension: impressions {
-    type: number
+  measure: impressions {
+    type: sum
     sql: ${TABLE}."IMPRESSIONS" ;;
   }
 
-  dimension: clicks {
-    type: number
+  measure: clicks {
+    type: sum
     sql: ${TABLE}."CLICKS" ;;
   }
 
-  dimension: orders {
-    type: number
+  measure: orders {
+    type: sum
     sql: ${TABLE}."ORDERS" ;;
   }
 
