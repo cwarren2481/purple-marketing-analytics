@@ -8,8 +8,7 @@
   elements:
     - name: hello_world
       type: looker_column
-
-- name: add_a_unique_name_1532453134
+    - name: add_a_unique_name_1532453134
   title: Cost Per Acquisition - 30 Day
   model: Marketing_Analytics
   explore: ROI
