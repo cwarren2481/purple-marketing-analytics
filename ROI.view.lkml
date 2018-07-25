@@ -42,7 +42,7 @@ view: ROI {
         group by date, platform, campaign_name, source),
       dai as (
         -- MAIN QUERY daily metrics by platform (set attribution window here)
-        select date, platform,campaign_name, source, spend, impressions, clicks
+        select date, platform,campaign_name, source, spend, impressions, clicks, landing_page
             , count(distinct order_event_id) orders,
         case when days_diff <= 30 then 1 else 0 end as thirty_day,
         case when days_diff <= 60 then 1 else 0 end as sixty_day,
@@ -51,7 +51,7 @@ view: ROI {
         from spd
         left join cmb on cmb.channel = spd.platform and to_date(cmb.time) = spd.date
         /*where days_diff <= 30*/ -- ATTRIBUTION WINDOW HOW CAN WE MAKE THIS VARIABLE IN THE REPORT?? OR MAYBE 1, 7, 30, 60
-        group by date, platform, campaign_name, source, spend, impressions, clicks,
+        group by date, platform, campaign_name, source, spend, impressions, clicks, landing_page,
         case when days_diff <= 30 then 1 else 0 end,
         case when days_diff <= 60 then 1 else 0 end,
         case when days_diff <= 7 then 1 else 0 end,
@@ -85,6 +85,10 @@ view: ROI {
     sql: ${TABLE}."CAMPAIGN_NAME" ;;
   }
 
+  dimension: landing_page {
+    type: string
+    sql: ${TABLE}."LANDING_PAGE" ;;
+  }
   dimension: source {
     type: string
     sql: ${TABLE}."SOURCE" ;;
