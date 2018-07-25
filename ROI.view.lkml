@@ -75,6 +75,13 @@ view: ROI {
     sql: ${TABLE}."DATE" ;;
   }
 
+  dimension_group: date {
+    type: time
+    timeframes: [month,week,date]
+    datatype: datetime
+    sql: ${TABLE}."DATE" ;;
+  }
+
   dimension: platform {
     type: string
     sql: ${TABLE}."PLATFORM" ;;
