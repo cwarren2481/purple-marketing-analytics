@@ -92,7 +92,9 @@ view: ROI {
 
   measure: spend {
     type: sum
-    sql: ${TABLE}."SPEND" ;;
+    sql: ${TABLE}."SPEND"
+    ;;
+    value_format: "$#.00;($#.00)"
   }
 
   measure: impressions {
