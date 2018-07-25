@@ -100,6 +100,11 @@ view: ROI {
     sql: ${TABLE}."IMPRESSIONS" ;;
   }
 
+  measure: revenue {
+    type:  sum
+    sql:  ${TABLE}."REVENUE" ;;
+  }
+
   measure: clicks {
     type: sum
     sql: ${TABLE}."CLICKS" ;;
