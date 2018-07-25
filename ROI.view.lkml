@@ -51,7 +51,7 @@ view: ROI {
         from spd
         left join cmb on cmb.channel = spd.platform and to_date(cmb.time) = spd.date
         /*where days_diff <= 30*/ -- ATTRIBUTION WINDOW HOW CAN WE MAKE THIS VARIABLE IN THE REPORT?? OR MAYBE 1, 7, 30, 60
-        group by date, platform, campaign_name, source, spend, impressions, clicks
+        group by date, platform, campaign_name, source, spend, impressions, clicks,
         case when days_diff <= 30 then 1 else 0 end,
         case when days_diff <= 60 then 1 else 0 end,
         case when days_diff <= 7 then 1 else 0 end,
