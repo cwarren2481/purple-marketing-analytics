@@ -36,10 +36,10 @@ view: ROI {
         from cj left join ses on cj.session_id = ses.session_id),
       spd as (
         -- spend data 2018 forward (since revenue is only since dec 2017)
-        select date, platform,sum(impressions) impressions, sum(clicks) clicks, sum(spend) spend, campaign_name, source
+        select date, platform,sum(impressions) impressions, sum(clicks) clicks, sum(spend) spend
         from ANALYTICS.MARKETING.ADSPEND
         where date >= '2018-01-01'
-        group by date, platform, campaign_name, source),
+        group by date, platform),
       dai as (
         -- MAIN QUERY daily metrics by platform (set attribution window here)
         select date, platform,campaign_name, source, spend, impressions, clicks
@@ -51,7 +51,7 @@ view: ROI {
         from spd
         left join cmb on cmb.channel = spd.platform and to_date(cmb.time) = spd.date
         /*where days_diff <= 30*/ -- ATTRIBUTION WINDOW HOW CAN WE MAKE THIS VARIABLE IN THE REPORT?? OR MAYBE 1, 7, 30, 60
-        group by date, platform, campaign_name, source, spend, impressions, clicks
+        group by date, platform, spend, impressions, clicks
       )
       -- SAMPLE GROUPING BY PLATFORM
       select * from dai
