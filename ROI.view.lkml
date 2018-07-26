@@ -42,7 +42,7 @@ view: ROI {
         group by date, platform),
       dai as (
         -- MAIN QUERY daily metrics by platform (set attribution window here)
-        select date, platform,campaign_name, source, spend, impressions, clicks
+        select date, platform, spend, impressions, clicks
             , count(distinct order_event_id) orders
             , count(distinct case when days_diff <= 30 then order_event_id end) as thirty_day
             , count(distinct case when days_diff <= 60 then order_event_id end) as sixty_day
@@ -82,17 +82,6 @@ view: ROI {
   dimension: platform {
     type: string
     sql: ${TABLE}."PLATFORM" ;;
-  }
-
-  dimension: campaign_name {
-    type: string
-    sql: ${TABLE}."CAMPAIGN_NAME" ;;
-  }
-
-
-  dimension: source {
-    type: string
-    sql: ${TABLE}."SOURCE" ;;
   }
 
   measure: spend {
@@ -141,8 +130,6 @@ view: ROI {
     fields: [
       date,
       platform,
-      campaign_name,
-      source,
       spend,
       impressions,
       clicks,
