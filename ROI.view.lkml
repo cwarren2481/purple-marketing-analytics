@@ -46,7 +46,7 @@ view: ROI {
             , count(distinct order_event_id) orders
             , count(distinct case when days_diff <= 30 then order_event_id end) as thirty_day
             , count(distinct case when days_diff <= 60 then order_event_id end) as sixty_day
-            , count(distinct case when days_diff <= 7 then order_event_id 0 end) as seven_day
+            , count(distinct case when days_diff <= 7 then order_event_id end) as seven_day
             , count(distinct case when days_diff <= 1 then order_event_id end) as one_day
         from spd
         left join cmb on cmb.channel = spd.platform and to_date(cmb.time) = spd.date
