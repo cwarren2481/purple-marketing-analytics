@@ -43,19 +43,16 @@ view: ROI {
       dai as (
         -- MAIN QUERY daily metrics by platform (set attribution window here)
         select date, platform,campaign_name, source, spend, impressions, clicks
-            , count(distinct order_event_id) orders,
-        case when days_diff <= 30 then 1 else 0 end as thirty_day,
-        case when days_diff <= 60 then 1 else 0 end as sixty_day,
-        case when days_diff <= 7 then 1 else 0 end as seven_day,
-        case when days_diff <= 1 then 1 else 0 end as one_day
+            , count(distinct order_event_id) orders
+            , count(distinct case when days_diff <= 30 then order_event_id end) as thirty_day
+            , count(distinct case when days_diff <= 60 then order_event_id end) as sixty_day
+            , count(distinct case when days_diff <= 7 then order_event_id 0 end) as seven_day
+            , count(distinct case when days_diff <= 1 then order_event_id end) as one_day
         from spd
         left join cmb on cmb.channel = spd.platform and to_date(cmb.time) = spd.date
         /*where days_diff <= 30*/ -- ATTRIBUTION WINDOW HOW CAN WE MAKE THIS VARIABLE IN THE REPORT?? OR MAYBE 1, 7, 30, 60
-        group by date, platform, campaign_name, source, spend, impressions, clicks,
-        case when days_diff <= 30 then 1 else 0 end,
-        case when days_diff <= 60 then 1 else 0 end,
-        case when days_diff <= 7 then 1 else 0 end,
-        case when days_diff <= 1 then 1 else 0 end)
+        group by date, platform, campaign_name, source, spend, impressions, clicks
+      )
       -- SAMPLE GROUPING BY PLATFORM
       select * from dai
 
