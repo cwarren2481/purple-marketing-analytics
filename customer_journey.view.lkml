@@ -77,7 +77,7 @@ view: customer_journey {
 
   measure: sessions {
     type: count_distinct
-    sql: ${TABLE}."session_cnt" ;;
+    sql: ${TABLE}."SESSION_CNT" ;;
   }
 
   set: detail {
