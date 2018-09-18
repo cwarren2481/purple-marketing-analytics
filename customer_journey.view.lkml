@@ -62,7 +62,7 @@ view: customer_journey {
 
   measure: sessions {
     type: number
-    sql: ${TABLE}l."SESSIONS" ;;
+    sql: ${TABLE}."SESSIONS" ;;
   }
 
   set: detail {
