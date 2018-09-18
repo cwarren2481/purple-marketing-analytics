@@ -11,12 +11,23 @@ view: customer_journey {
         and s.session_id = p.session_id
         where s.user_id in (select distinct user_id from analytics.HEAP.purchase)
         and (p.dollars > 0 or p.dollars is null)
-      )
+      ),
+      xcs as(
       select row_number() over (partition by user_id order by time) session_cnt
           , case when purchase_flag = 'PURCHASE' then row_number() over (partition by user_id, purchase_flag order by time) end purchase_session_cnt
           , x.*
-      from x
-      order by user_id, time
+      from x),
+      xaa as(
+      select xcs.*, case when purchase_flag = 'PURCHASE' and purchase_session_cnt = 1 then time else NULL end as purchase_time from xcs),
+      xbb as(
+      select xaa.*, b.first_purchase, c.num_purchases from xaa
+      left join (select distinct user_id, min(purchase_time) first_purchase from xaa
+                group by user_id) b
+      on xaa.user_id = b.user_id
+      left join (select user_id, count(distinct purchase_session_cnt) num_purchases from xaa
+                group by user_id) c
+      on xaa.user_id = c.user_id)
+      select * from xbb
        ;;
   }
 
@@ -75,9 +86,19 @@ view: customer_journey {
     sql: ${TABLE}."DOLLARS" ;;
   }
 
-  measure: sessions {
-    type: count_distinct
-    sql: ${TABLE}."SESSION_CNT" ;;
+  dimension_group: purchase_time {
+    type: time
+    sql: ${TABLE}."PURCHASE_TIME" ;;
+  }
+
+  dimension_group: first_purchase {
+    type: time
+    sql: ${TABLE}."FIRST_PURCHASE" ;;
+  }
+
+  dimension: num_purchases {
+    type: number
+    sql: ${TABLE}."NUM_PURCHASES" ;;
   }
 
   set: detail {
@@ -92,7 +113,9 @@ view: customer_journey {
       utm_campaign,
       purchase_flag,
       dollars,
-      sessions
+      purchase_time_time,
+      first_purchase_time,
+      num_purchases
     ]
   }
 }
