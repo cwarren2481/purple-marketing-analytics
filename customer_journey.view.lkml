@@ -9,7 +9,6 @@ view: customer_journey {
       and s.session_id = p.session_id
       where s.user_id in (select distinct user_id from analytics.HEAP.purchase)
       and (p.dollars > 0 or p.dollars is null)
-      group by s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
       --and purchase_flag = 'PURCHASE'
       --and s.user_id = 4702333951502204
        ;;
