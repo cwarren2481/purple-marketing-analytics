@@ -101,6 +101,11 @@ view: customer_journey {
     sql: ${TABLE}."NUM_PURCHASES" ;;
   }
 
+  measure: num_sessions {
+    type: count_distinct
+    sql: ${TABLE}."SESSION_ID" ;;
+  }
+
   set: detail {
     fields: [
       session_cnt,
@@ -115,7 +120,8 @@ view: customer_journey {
       dollars,
       purchase_time_time,
       first_purchase_time,
-      num_purchases
+      num_purchases,
+      num_sessions
     ]
   }
 }
