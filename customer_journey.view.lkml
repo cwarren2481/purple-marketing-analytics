@@ -75,6 +75,11 @@ view: customer_journey {
     sql: ${TABLE}."DOLLARS" ;;
   }
 
+  measure: sessions {
+    type: count_distinct
+    sql: ${TABLE}."session_cnt" ;;
+  }
+
   set: detail {
     fields: [
       session_cnt,
@@ -86,7 +91,8 @@ view: customer_journey {
       landing_page,
       utm_campaign,
       purchase_flag,
-      dollars
+      dollars,
+      sessions
     ]
   }
 }
