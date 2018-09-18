@@ -55,12 +55,12 @@ view: customer_journey {
     sql: ${TABLE}."PURCHASE_FLAG" ;;
   }
 
-  dimension: dollars {
+  measure: dollars {
     type: number
     sql: ${TABLE}."DOLLARS" ;;
   }
 
-  dimension: sessions {
+  measure: sessions {
     type: number
     sql: ${TABLE}l."SESSIONS" ;;
   }
