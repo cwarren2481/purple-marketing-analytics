@@ -81,7 +81,7 @@ view: customer_journey {
     sql: ${TABLE}."PURCHASE_FLAG" ;;
   }
 
-  dimension: dollars {
+  measure: dollars {
     type: number
     sql: ${TABLE}."DOLLARS" ;;
   }
@@ -96,8 +96,8 @@ view: customer_journey {
     sql: ${TABLE}."FIRST_PURCHASE" ;;
   }
 
-  dimension: num_purchases {
-    type: number
+  measure: num_purchases {
+    type: sum
     sql: ${TABLE}."NUM_PURCHASES" ;;
   }
 
