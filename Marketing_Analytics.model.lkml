@@ -8,7 +8,7 @@ datagroup: marketing_analytics_default_datagroup {
   max_cache_age: "1 hour"
 }
 
-explore: customer_journey {
+explore: customer_journey_first_purchase {
   label: "Customer Journey"
   description: "Customery Journey"
 }

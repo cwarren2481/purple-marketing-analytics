@@ -1,4 +1,4 @@
-view: customer_journey {
+view: customer_journey_first_purchase {
   derived_table: {
     sql: with x as (
         --Customer Journey
@@ -27,7 +27,7 @@ view: customer_journey {
       left join (select user_id, count(distinct purchase_session_cnt) num_purchases from xaa
                 group by user_id) c
       on xaa.user_id = c.user_id)
-      select * from xbb
+      select * from xbb where time <= first_purchase
        ;;
   }
 
