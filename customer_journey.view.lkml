@@ -1,6 +1,6 @@
 view: customer_journey {
   derived_table: {
-    sql: select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign, count(s.session_id) as sessions
+    sql: select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
           , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
           , p.dollars
       from analytics.HEAP.sessions s
@@ -60,10 +60,6 @@ view: customer_journey {
     sql: ${TABLE}."DOLLARS" ;;
   }
 
-  measure: sessions {
-    type: number
-    sql: ${TABLE}."SESSIONS" ;;
-  }
 
   set: detail {
     fields: [
@@ -74,8 +70,7 @@ view: customer_journey {
       landing_page,
       utm_campaign,
       purchase_flag,
-      dollars,
-      sessions
+      dollars
     ]
   }
 }
