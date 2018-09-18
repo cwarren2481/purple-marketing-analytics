@@ -1,6 +1,6 @@
 view: customer_journey {
   derived_table: {
-    sql: select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
+    sql: select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign, count(s.session_id) as sessions
           , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
           , p.dollars
       from analytics.HEAP.sessions s
@@ -9,6 +9,7 @@ view: customer_journey {
       and s.session_id = p.session_id
       where s.user_id in (select distinct user_id from analytics.HEAP.purchase)
       and (p.dollars > 0 or p.dollars is null)
+      group by s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
       --and purchase_flag = 'PURCHASE'
       --and s.user_id = 4702333951502204
        ;;
@@ -59,6 +60,11 @@ view: customer_journey {
     sql: ${TABLE}."DOLLARS" ;;
   }
 
+  dimension: sessions {
+    type: number
+    sql: ${TABLE}l."SESSIONS" ;;
+  }
+
   set: detail {
     fields: [
       user_id,
@@ -68,7 +74,8 @@ view: customer_journey {
       landing_page,
       utm_campaign,
       purchase_flag,
-      dollars
+      dollars,
+      sessions
     ]
   }
 }
