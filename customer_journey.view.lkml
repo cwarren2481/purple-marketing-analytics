@@ -16,7 +16,7 @@ view: customer_journey {
           , case when purchase_flag = 'PURCHASE' then row_number() over (partition by user_id, purchase_flag order by time) end purchase_session_cnt
           , x.*
       from x
-      order by user_id, time;
+      order by user_id, time
        ;;
   }
 
