@@ -11,7 +11,6 @@ view: customer_journey {
       and (p.dollars > 0 or p.dollars is null)
       --and purchase_flag = 'PURCHASE'
       --and s.user_id = 4702333951502204
-      order by s.user_id, s.time;
        ;;
   }
 
