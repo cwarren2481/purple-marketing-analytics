@@ -49,9 +49,9 @@ order by total_sessions desc
     drill_fields: [detail*]
   }
 
-  measure: avg_num_sessions {
+  measure: num_sessions {
     type: sum
-    sql: ${TABLE}."AVG_NUM_SESSIONS" ;;
+    sql: ${TABLE}."NUM_SESSIONS" ;;
   }
 
   measure: avg_views_per_session {
@@ -74,6 +74,6 @@ order by total_sessions desc
   }
 
   set: detail {
-    fields: [avg_num_sessions, avg_views_per_session, total_sessions, landing_page,time]
+    fields: [num_sessions, avg_views_per_session, total_sessions, landing_page,time]
   }
 }
