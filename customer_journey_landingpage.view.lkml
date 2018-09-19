@@ -40,7 +40,7 @@ left join (select count(session_id) total_sessions, landing_page from x group by
 on xff.landing_page = a.landing_page
 where total_sessions > 100 and xff.referrer not like '%purple.com%'
 group by xff.landing_page, a.total_sessions
-order by total_sessions desc;
+order by total_sessions desc
        ;;
   }
 
