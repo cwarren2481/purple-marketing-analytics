@@ -39,7 +39,6 @@ view: customer_journey_landing_page{
       select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,  xff.landing_page from xff
       left join (select count(session_id) total_sessions, landing_page from x group by landing_page) a
       on xff.landing_page = a.landing_page
-      where xff.landing_page not like '%purple.com%'
       group by xff.landing_page, a.total_sessions
       order by total_sessions desc
              ;;
