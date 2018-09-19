@@ -27,7 +27,8 @@ view: customer_journey_first_purchase {
       left join (select user_id, count(distinct purchase_session_cnt) num_purchases from xaa
                 group by user_id) c
       on xaa.user_id = c.user_id)
-      select * from xbb where time <= first_purchase
+      select xbb.*, a.pageviews from xbb left join (select session_id,user_id,count(time) as pageviews from analytics.heap.pageviews group by session_id, user_id) a on xbb.session_id = a.session_id
+      and xbb.user_id = a.user_id where xbb.time <= first_purchase
        ;;
   }
 
@@ -106,6 +107,11 @@ view: customer_journey_first_purchase {
     sql: ${TABLE}."SESSION_ID" ;;
   }
 
+  measure: page_views {
+    type: sum
+    sql: ${TABLE}."PAGEVIEWS" ;;
+  }
+
   set: detail {
     fields: [
       session_cnt,
@@ -121,7 +127,8 @@ view: customer_journey_first_purchase {
       purchase_time_time,
       first_purchase_time,
       num_purchases,
-      num_sessions
+      num_sessions,
+      page_views
     ]
   }
 }
