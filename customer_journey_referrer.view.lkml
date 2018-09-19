@@ -50,17 +50,17 @@ view: customer_journey_referrer {
   }
 
   measure: avg_num_sess {
-    type: number
+    type: sum
     sql: ${TABLE}."AVG_NUM_SESS" ;;
   }
 
   measure: avg_pageviews_per_sess {
-    type: number
+    type: sum
     sql: ${TABLE}."AVG_PAGEVIEWS_PER_SESS" ;;
   }
 
   measure: total_sessions {
-    type: number
+    type: sum
     sql: ${TABLE}."TOTAL_SESSIONS" ;;
   }
 
