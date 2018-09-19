@@ -54,9 +54,9 @@ order by total_sessions desc
     sql: ${TABLE}."NUM_SESSIONS" ;;
   }
 
-  measure: avg_pageviews_per_sess {
+  measure: avg_views_per_sess {
     type: sum
-    sql: ${TABLE}."AVG_PAGEVIEWS_PER_SESS" ;;
+    sql: ${TABLE}."AVG_VIEWS_PER_SESS" ;;
   }
 
   measure: total_sessions {
@@ -74,6 +74,6 @@ order by total_sessions desc
   }
 
   set: detail {
-    fields: [num_sess, avg_pageviews_per_sess, total_sessions, referrer,time]
+    fields: [num_sess, avg_views_per_sess, total_sessions, referrer,time]
   }
 }
