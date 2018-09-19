@@ -31,15 +31,15 @@ left join (select session_id,user_id,count(time) as pageviews from analytics.hea
 on xaa.user_id = d.user_id and xaa.session_id = d.session_id
 ),
 xff as(
-select count(distinct session_cnt) num_sessions, avg(pageviews) avg_views_sess,user_id, landing_page, referrer from xbb
+select count(distinct session_cnt) num_sessions, avg(pageviews) avg_views_sess,user_id, landing_page, referrer, time from xbb
 where time <= first_purchase
-group by landing_page, referrer, user_id)
+group by landing_page, referrer, user_id, time)
 
-select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,   xff.landing_page from xff
-left join (select count(session_id) total_sessions, landing_page from x group by landing_page having count(session_id) > 100) a
-on xff.landing_page = a.landing_page
-where total_sessions > 100 and xff.referrer not like '%purple.com%'
-group by xff.landing_page, a.total_sessions
+select sum(num_sessions) num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions, xff.time,  xff.referrer from xff
+left join (select count(session_id) total_sessions, time, referrer from x group by referrer,time) a
+on xff.referrer = a.referrer and xff.time = a.time
+where xff.referrer not like '%purple.com%'
+group by xff.referrer, a.total_sessions, xff.time
 order by total_sessions desc
        ;;
   }
@@ -68,8 +68,12 @@ order by total_sessions desc
     type: string
     sql: ${TABLE}."LANDING_PAGE" ;;
   }
+  dimension: time {
+    type: date
+    sql: ${TABLE}."TIME" ;;
+  }
 
   set: detail {
-    fields: [avg_num_sessions, avg_views_per_session, total_sessions, landing_page]
+    fields: [avg_num_sessions, avg_views_per_session, total_sessions, landing_page,time]
   }
 }
