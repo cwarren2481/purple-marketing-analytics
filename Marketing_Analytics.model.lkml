@@ -20,3 +20,7 @@ explore: customer_journey_referrer {
   label: "Referral"
   description: "Breakdown of the customer journey by Referring URL"
 }
+explore: customer_journey_landing_page {
+  label: "Landing Page"
+  description: "Breakdown of the customer journey by Landing Page"
+}
