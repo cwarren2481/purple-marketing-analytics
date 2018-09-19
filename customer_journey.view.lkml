@@ -109,6 +109,11 @@ view: customer_journey {
     sql: ${TABLE}."PAGEVIEWS" ;;
   }
 
+  measure: sessions {
+    type: count_distinct
+    sql: ${TABLE}."SESSION_ID" ;;
+  }
+
   set: detail {
     fields: [
       session_cnt,
