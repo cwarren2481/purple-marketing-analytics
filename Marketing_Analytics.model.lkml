@@ -24,3 +24,7 @@ explore: customer_journey_landing_page {
   label: "Landing Page"
   description: "Breakdown of the customer journey by Landing Page"
 }
+explore: customer_journey_path {
+  label: "Path Analysis"
+  description: "What are the most common customer journeys to a purchase?"
+}
