@@ -16,3 +16,7 @@ explore: ROI {
   label: "ROI"
   description: "Daily adspend details, including channel, clicks, impressions, spend, device, platform, etc."
 }
+explore: customer_journey_referrer {
+  label: "Referral"
+  description: "Breakdown of the customer journey by Referring URL"
+}
