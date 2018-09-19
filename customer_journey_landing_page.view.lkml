@@ -64,12 +64,12 @@ order by total_sessions desc
     sql: ${TABLE}."TOTAL_SESSIONS" ;;
   }
 
-  dimension: referrer {
+  dimension: landing_page {
     type: string
-    sql: ${TABLE}."REFERRER" ;;
+    sql: ${TABLE}."LANDING_PAGE" ;;
   }
 
   set: detail {
-    fields: [avg_num_sessions, avg_views_per_session, total_sessions, referrer]
+    fields: [avg_num_sessions, avg_views_per_session, total_sessions, landing_page]
   }
 }
