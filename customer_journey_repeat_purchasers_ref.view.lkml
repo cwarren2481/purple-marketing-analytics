@@ -49,7 +49,7 @@ view: customer_journey_repeat_purchasers_ref {
       on xcc.user_id = b.user_id
       group by xcc.referrer, a.total_purchases
       having avg_repeat_purchase > 0
-      order by 2 desc;
+      order by 2 desc
        ;;
   }
 
