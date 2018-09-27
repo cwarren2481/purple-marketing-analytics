@@ -28,7 +28,11 @@ explore: customer_journey_path {
   label: "Path Analysis"
   description: "What are the most common customer journeys to a purchase?"
 }
-explore: customer_journey_repeat_purchasers{
-  label: "Repeat Purchase Analysis"
-  description: "Repeat Purchases"
+explore: customer_journey_repeat_purchasers_LP {
+  label: "Repeat Purchase Analysis LP"
+  description: "Repeat Purchases by landing page"
+}
+explore: customer_journey_repeat_purchasers_ref {
+  label: "Repeat Purchase Analysis Ref"
+  description: "Repeat Purchases by referrer"
 }

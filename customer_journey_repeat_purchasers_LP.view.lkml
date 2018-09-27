@@ -1,4 +1,4 @@
-view: customer_journey_repeat_purchasers {
+view: customer_journey_repeat_purchasers_LP {
   derived_table: {
     sql: --Find the average number of repeat purchasers (High Value Customers) by landing page and referring URL
 
