@@ -59,7 +59,7 @@ view: customer_journey_repeat_purchasers_ref {
   }
 
   measure: avg_repeat_purchase {
-    type: sum
+    type: number
     sql: ${TABLE}."AVG_REPEAT_PURCHASE" ;;
   }
 
