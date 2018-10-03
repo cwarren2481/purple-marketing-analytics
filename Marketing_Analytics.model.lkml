@@ -38,8 +38,3 @@ explore: customer_journey_repeat_purchasers_LP {
   label: "Repeat Purchase Analysis LP"
   description: "Repeat Purchases by landing page"
 }
-explore: customer_journey_repeat_purchasers_ref {
-  group_label: "Marketing analytics"
-  label: "Repeat Purchase Analysis Ref"
-  description: "Repeat Purchases by referrer"
-}
