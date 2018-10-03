@@ -80,12 +80,12 @@ view: customer_journey_repeat_purchasers_ref {
     drill_fields: [detail*]
   }
 
-  dimension: avg_repeat_purchase {
-    type: number
+  measure: avg_repeat_purchase {
+    type: sum
     sql: ${TABLE}."AVG_REPEAT_PURCHASE" ;;
   }
 
-  dimension: total_purchases {
+  measure: total_purchases {
     type: number
     sql: ${TABLE}."TOTAL_PURCHASES" ;;
   }
