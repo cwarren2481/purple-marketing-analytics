@@ -83,12 +83,12 @@ from xee
     sql: ${TABLE}."TOTAL_SESSIONS" ;;
   }
 
-  dimension: referrer {
+  dimension: initial_referrer {
     type: string
-    sql: ${TABLE}."REFERRER" ;;
+    sql: ${TABLE}."INITIAL_REFERRER" ;;
   }
 
   set: detail {
-    fields: [avg_num_sessions, avg_views_per_session, total_sessions, referrer]
+    fields: [avg_num_sessions, avg_views_per_session, total_sessions, initial_referrer]
   }
 }
