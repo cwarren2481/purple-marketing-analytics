@@ -1,8 +1,7 @@
 view: customer_journey_referrer {
   derived_table: {
     sql: with x as (
-  --Customer Journey
-  select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
+select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
       , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
       , p.dollars
   from analytics.HEAP.sessions s
@@ -11,9 +10,9 @@ view: customer_journey_referrer {
   and s.session_id = p.session_id
   where s.user_id in (select distinct user_id from analytics.HEAP.purchase)
   and (p.dollars > 0 or p.dollars is null)
-  and time between '2018-01-01' and CURRENT_DATE
-),
-xcs as(
+  and time between '2018-01-01' and CURRENT_DATE)
+
+, xcs as(
 select row_number() over (partition by user_id order by time) session_cnt
     , case when purchase_flag = 'PURCHASE' then row_number() over (partition by user_id, purchase_flag order by time) end purchase_session_cnt
     , x.*
@@ -36,12 +35,31 @@ select count(distinct session_cnt) num_sessions, avg(pageviews) avg_views_sess,u
 where time <= first_purchase
 group by landing_page, referrer, user_id)
 
-select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,  xff.referrer from xff
+, xee as (select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,  xff.referrer from xff
 left join (select count(session_id) total_sessions, referrer from x group by referrer) a
 on xff.referrer = a.referrer
 where xff.referrer not like '%purple.com%'
 group by xff.referrer, a.total_sessions
-order by total_sessions desc
+order by total_sessions desc)
+
+select avg_num_sessions, avg_views_per_session, total_sessions
+, case when lower(referrer) like '%purple.com%' then 'PURPLE'
+         when lower(referrer) like '%goog%' then 'GOOGLE'
+         when lower(referrer) like '%fb%' then 'FACEBOOK'
+         when lower(referrer) like '%faceb%' then 'FACEBOOK'
+         when lower(referrer) like '%yaho%' then 'YAHOO'
+         when lower(referrer) like '%bing%' then 'BING'
+         when lower(referrer) like '%instag%' then 'INSTAGRAM'
+         when lower(referrer) like '%youtu%' then 'YOUTUBE'
+         when lower(referrer) like '%aol%' then 'AOL'
+         when lower(referrer) like '%sleepop%' then 'SLEEPOPOLIS'
+         when lower(referrer) like '%pintere%' then 'PINTEREST'
+         when lower(referrer) like '%huff%' then 'HUFFINGTON POST'
+         when lower(referrer) like '%mattressf%' then 'MATTRESS FIRM'
+         when lower(referrer) like '%outbrain%' then 'OUTBRAIN'
+         when referrer is null then null
+         else 'OTHER' end initial_referrer
+from xee
        ;;
   }
 
