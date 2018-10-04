@@ -71,7 +71,7 @@ view: customer_journey_repeat_purchasers_ref {
                when lower(referrer) like '%outbrain%' then 'OUTBRAIN'
                when referrer is null then null
                else 'OTHER' end initial_referrer
-      from xdd;
+      from xdd
        ;;
   }
 
