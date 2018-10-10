@@ -94,6 +94,7 @@ from xdd
 
   measure: avg_dollars {
     type: sum
+    value_format:"$#.00;($#.00)"
     sql: ${TABLE}."AVG_DOLLARS" ;;
   }
 
