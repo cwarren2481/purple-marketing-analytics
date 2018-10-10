@@ -93,7 +93,7 @@ from xdd
   }
 
   measure: avg_dollars {
-    type: number
+    type: sum
     sql: ${TABLE}."AVG_DOLLARS" ;;
   }
 
