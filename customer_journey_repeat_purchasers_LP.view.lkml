@@ -50,7 +50,6 @@ left join (select landing_page, user_id from x where session_number = 1) as b
 on xcc.user_id = b.user_id
 group by xcc.landing_page, a.total_purchases
 having avg_repeat_purchase > 0
-order by 2 desc
        ;;
   }
 
