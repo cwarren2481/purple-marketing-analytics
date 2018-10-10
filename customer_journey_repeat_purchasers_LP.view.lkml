@@ -69,7 +69,8 @@ having avg_repeat_purchase > 0
   }
 
   measure: avg_dollars {
-    type: number
+    type: average
+    value_format:"$#.00;($#.00)"
     sql: ${TABLE}."AVG_DOLLARS" ;;
   }
 
