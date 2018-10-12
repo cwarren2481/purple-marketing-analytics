@@ -11,7 +11,7 @@ view: page_views_analysis {
     drill_fields: [detail*]
   }
 
-  dimension: page_count {
+  measure: page_count {
     type: number
     sql: ${TABLE}."PAGE_COUNT" ;;
   }
