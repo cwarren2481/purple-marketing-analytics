@@ -6,8 +6,6 @@ view: customer_journey_repeat_purchasers_ref {
             , row_number() over(partition by s.user_id order by time) as session_number
             , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
             , p.dollars
-            , p.product
-            , p.token
         from analytics.HEAP.sessions s
         left join (select user_id, session_id, sum(dollars) dollars from analytics.HEAP.purchase group by user_id, session_id) p
         on s.user_id = p.user_id
@@ -37,7 +35,6 @@ select user_id
   , landing_page
   , referrer
   , dollars
-  , product
 from xbb
 where num_purchases > 1
 group by landing_page, referrer, user_id, dollars, product)
@@ -53,11 +50,11 @@ on a.referrer = xcc.referrer
 left join (select user_id, referrer
          from x where session_number = 1) as b
 on xcc.user_id = b.user_id
-group by xcc.referrer, a.total_purchases, product
+group by xcc.referrer, a.total_purchases
 having avg_repeat_purchase > 0
 order by 2 desc)
 
-select avg(avg_repeat_purchase) avg_repeat_purchase, sum(total_purchases) total_purchases, product
+select avg(avg_repeat_purchase) avg_repeat_purchase, sum(total_purchases) total_purchases
 , case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%goog%' then 'GOOGLE'
          when lower(referrer) like '%fb%' then 'FACEBOOK'
@@ -92,7 +89,7 @@ group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%outbrain%' then 'OUTBRAIN'
          when referrer is null then null
          else 'OTHER' end
-         , product;
+        ;
        ;;
   }
 
@@ -122,12 +119,8 @@ group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
     sql: ${TABLE}."INITIAL_REFERRER" ;;
   }
 
-  dimension: product {
-    type: string
-    sql: ${TABLE}."PRODUCT" ;;
-  }
 
   set: detail {
-    fields: [avg_repeat_purchase, total_purchases, avg_dollars, initial_referrer, product]
+    fields: [avg_repeat_purchase, total_purchases, avg_dollars, initial_referrer]
   }
 }

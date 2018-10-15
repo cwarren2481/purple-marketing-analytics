@@ -5,8 +5,6 @@ view: customer_journey_first_purchase {
         select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
             , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
             , p.dollars
-            , p.product
-            , p.token
         from analytics.HEAP.sessions s
         left join (select user_id, session_id, sum(dollars) dollars from analytics.HEAP.purchase group by user_id, session_id) p
         on s.user_id = p.user_id
@@ -114,10 +112,6 @@ view: customer_journey_first_purchase {
     sql: ${TABLE}."PAGEVIEWS" ;;
   }
 
-  dimension: product {
-    type: string
-    sql: ${TABLE}."PRODUCT" ;;
-  }
 
   set: detail {
     fields: [
@@ -135,8 +129,7 @@ view: customer_journey_first_purchase {
       first_purchase_time,
       num_purchases,
       num_sessions,
-      page_views,
-      product
+      page_views
     ]
   }
 }

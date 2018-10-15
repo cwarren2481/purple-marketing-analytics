@@ -5,8 +5,6 @@ view: customer_journey_referrer {
         select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
             , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
             , p.dollars
-            , p.product
-            , p.token
         from analytics.HEAP.sessions s
         left join (select user_id, session_id, sum(dollars) dollars from analytics.HEAP.purchase group by user_id, session_id) p
         on s.user_id = p.user_id
@@ -43,11 +41,11 @@ group by landing_page, referrer, user_id, product)
 left join (select count(session_id) total_sessions, referrer from x group by referrer) a
 on xff.referrer = a.referrer
 where xff.referrer not like '%purple.com%'
-group by xff.referrer, a.total_sessions, xff.product
+group by xff.referrer, a.total_sessions
 order by total_sessions desc)
 
 select avg(avg_num_sessions) avg_num_sessions, avg(avg_views_per_session) avg_views_per_session, sum(total_sessions) total_sessions
-  , xee.product
+
 , case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%goog%' then 'GOOGLE'
          when lower(referrer) like '%fb%' then 'FACEBOOK'
@@ -81,7 +79,7 @@ group by  case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%outbrain%' then 'OUTBRAIN'
          when referrer is null then null
          else 'OTHER' end
-  , xee.product;;
+  ;;
   }
 
   measure: count {
@@ -109,12 +107,7 @@ group by  case when lower(referrer) like '%purple.com%' then 'PURPLE'
     sql: ${TABLE}."INITIAL_REFERRER" ;;
   }
 
-  dimension: product {
-    type: string
-    sql: ${TABLE}."PRODUCT" ;;
-  }
-
   set: detail {
-    fields: [avg_num_sessions, avg_views_per_session, total_sessions, initial_referrer, product]
+    fields: [avg_num_sessions, avg_views_per_session, total_sessions, initial_referrer]
   }
 }

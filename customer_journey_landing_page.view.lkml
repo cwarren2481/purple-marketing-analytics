@@ -5,8 +5,6 @@ view: customer_journey_landing_page{
         select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
             , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
             , p.dollars
-            , p.product
-            , p.token
         from analytics.HEAP.sessions s
         left join (select user_id, session_id, sum(dollars) dollars from analytics.HEAP.purchase group by user_id, session_id) p
         on s.user_id = p.user_id
@@ -38,11 +36,11 @@ view: customer_journey_landing_page{
       where time <= first_purchase
       group by landing_page, referrer, user_id, product)
 
-      select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,  xff.landing_page, xff.product
+      select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,  xff.landing_page
       from xff
       left join (select count(session_id) total_sessions, landing_page from x group by landing_page) a
       on xff.landing_page = a.landing_page
-      group by xff.landing_page, a.total_sessions, xff.product
+      group by xff.landing_page, a.total_sessions
       order by total_sessions desc
              ;;
   }
@@ -72,12 +70,10 @@ view: customer_journey_landing_page{
     sql: ${TABLE}."LANDING_PAGE" ;;
   }
 
-  dimension: product {
-    type: string
-    sql: ${TABLE}."PRODUCT" ;;
-  }
+
+
 
   set: detail {
-    fields: [avg_num_sessions, avg_views_per_session, total_sessions, landing_page, product]
+    fields: [avg_num_sessions, avg_views_per_session, total_sessions, landing_page]
   }
 }

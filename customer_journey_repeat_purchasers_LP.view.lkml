@@ -6,8 +6,6 @@ view: customer_journey_repeat_purchasers_LP {
             , row_number() over(partition by s.user_id order by time) as session_number
             , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
             , p.dollars
-            , p.product
-            , p.token
         from analytics.HEAP.sessions s
         left join (select user_id, session_id, sum(dollars) dollars from analytics.HEAP.purchase group by user_id, session_id) p
         on s.user_id = p.user_id
@@ -36,20 +34,19 @@ select user_id
   , landing_page
   , referrer
   , dollars
-  , product
 from xbb
 where num_purchases > 1
-group by landing_page, referrer, user_id, dollars, product)
+group by landing_page, referrer, user_id, dollars)
 
     --avg repeat_purchase with total_purchases by landing_page
-select avg(repeat_purchase) avg_repeat_purchase, a.total_purchases, xcc.landing_page, round(avg(dollars)) as avg_dollars, product
+select avg(repeat_purchase) avg_repeat_purchase, a.total_purchases, xcc.landing_page, round(avg(dollars)) as avg_dollars
 from xcc
 left join (select count(purchase_flag) total_purchases , landing_page from x group by landing_page, purchase_flag
            having purchase_flag = 'PURCHASE') a
 on a.landing_page = xcc.landing_page
 left join (select landing_page, user_id from x where session_number = 1) as b
 on xcc.user_id = b.user_id
-group by xcc.landing_page, a.total_purchases, product
+group by xcc.landing_page, a.total_purchases
 having avg_repeat_purchase > 0
        ;;
   }
@@ -80,12 +77,8 @@ having avg_repeat_purchase > 0
     sql: ${TABLE}."LANDING_PAGE" ;;
   }
 
-  dimension: product {
-    type: string
-    sql: ${TABLE}."PRODUCT" ;;
-  }
 
   set: detail {
-    fields: [avg_repeat_purchase, total_purchases, avg_dollars, landing_page, product]
+    fields: [avg_repeat_purchase, total_purchases, avg_dollars, landing_page]
   }
 }

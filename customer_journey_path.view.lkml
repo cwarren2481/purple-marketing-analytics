@@ -6,8 +6,6 @@ with x as (
         select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
             , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
             , p.dollars
-            , p.product
-            , p.token
         from analytics.HEAP.sessions s
         left join (select user_id, session_id, sum(dollars) dollars from analytics.HEAP.purchase group by user_id, session_id) p
         on s.user_id = p.user_id
@@ -15,7 +13,7 @@ with x as (
         where s.user_id in (select distinct user_id from analytics.HEAP.purchase)
         and (p.dollars > 0 or p.dollars is null))
 , zza as(
-select x.user_id, x.product
+select x.user_id
   , case when a.path = '/' then a.title
   when a.path like '%checkout%' then 'Checkout' else a.path end as path
   , a.time, a.landing_page, x.session_id, row_number() over (partition by a.user_id,a.session_id order by a.time) as event_number
@@ -56,7 +54,7 @@ SELECT user_id, zza.product
          group by user_id, session_id, zza.product)
 
 select count(session_id) as occurences, zzd.product, E1, E2, E3, E4, E5 from zzd
-group by E1, E2, E3, E4, E5, zzd.product
+group by E1, E2, E3, E4, E5
 order by occurences desc
 
        ;;
@@ -97,11 +95,6 @@ order by occurences desc
     sql: ${TABLE}."E5" ;;
   }
 
-  dimension: product {
-    type: string
-    sql: ${TABLE}."PRODUCT" ;;
-  }
-
   set: detail {
     fields: [
       occurences,
@@ -109,8 +102,7 @@ order by occurences desc
       e2,
       e3,
       e4,
-      e5,
-      product
+      e5
     ]
   }
 }
