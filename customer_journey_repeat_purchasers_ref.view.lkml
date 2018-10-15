@@ -89,7 +89,7 @@ group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%outbrain%' then 'OUTBRAIN'
          when referrer is null then null
          else 'OTHER' end
-        ;
+
        ;;
   }
 
