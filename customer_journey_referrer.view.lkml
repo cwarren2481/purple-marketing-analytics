@@ -8,19 +8,7 @@ view: customer_journey_referrer {
             , p.product
             , p.token
         from analytics.HEAP.sessions s
-        left join (select a.user_id, session_id, b.checkout_token,split_part(a.path,'/',-2) as token
-        , listagg(c.name,', ') within group (order by c.name) as Product
-        , a.dollars
-        from analytics.heap.purchase a
-        left join "ANALYTICS_STAGE"."SHOPIFY_US_FT"."ORDER" b
-        on split_part(a.path,'/',-2) = b.checkout_token
-        left join "ANALYTICS_STAGE"."SHOPIFY_US_FT"."ORDER_LINE" c
-        on b.id = c.order_id
-        left join "ANALYTICS_STAGE"."SHOPIFY_US_FT"."PRODUCT_VARIANT" d
-        on c.variant_id = d.id
-        where checkout_token is not null
-        group by a.user_id, session_id, b.checkout_token, split_part(path,'/',-2), a.dollars
-        order by user_id) p
+        left join (select user_id, session_id, sum(dollars) dollars from analytics.HEAP.purchase group by user_id, session_id) p
         on s.user_id = p.user_id
         and s.session_id = p.session_id
         where s.user_id in (select distinct user_id from analytics.HEAP.purchase)
