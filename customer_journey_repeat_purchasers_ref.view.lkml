@@ -55,7 +55,7 @@ group by xcc.referrer, a.total_purchases
 having avg_repeat_purchase > 0
 order by 2 desc)
 
-select avg_repeat_purchase, total_purchases
+select avg(avg_repeat_purchase) avg_repeat_purchase, sum(total_purchases) total_purchases
 , case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%goog%' then 'GOOGLE'
          when lower(referrer) like '%fb%' then 'FACEBOOK'
@@ -74,6 +74,22 @@ select avg_repeat_purchase, total_purchases
          else 'OTHER' end initial_referrer
 , avg_dollars
 from xdd
+group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
+         when lower(referrer) like '%goog%' then 'GOOGLE'
+         when lower(referrer) like '%fb%' then 'FACEBOOK'
+         when lower(referrer) like '%faceb%' then 'FACEBOOK'
+         when lower(referrer) like '%yaho%' then 'YAHOO'
+         when lower(referrer) like '%bing%' then 'BING'
+         when lower(referrer) like '%instag%' then 'INSTAGRAM'
+         when lower(referrer) like '%youtu%' then 'YOUTUBE'
+         when lower(referrer) like '%aol%' then 'AOL'
+         when lower(referrer) like '%sleepop%' then 'SLEEPOPOLIS'
+         when lower(referrer) like '%pintere%' then 'PINTEREST'
+         when lower(referrer) like '%huff%' then 'HUFFINGTON POST'
+         when lower(referrer) like '%mattressf%' then 'MATTRESS FIRM'
+         when lower(referrer) like '%outbrain%' then 'OUTBRAIN'
+         when referrer is null then null
+         else 'OTHER' end
        ;;
   }
 
