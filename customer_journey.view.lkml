@@ -48,28 +48,28 @@ view: customer_journey {
        ;;
   }
 
-  measure: count {
-    type: count
+ dimension: count {
+    type: number
     drill_fields: [detail*]
   }
 
-  measure: session_cnt {
-    type: sum
+  dimension: session_cnt {
+    type: number
     sql: ${TABLE}."SESSION_CNT" ;;
   }
 
-  measure: purchase_session_cnt {
-    type: sum
+  dimension: purchase_session_cnt {
+    type: number
     sql: ${TABLE}."PURCHASE_SESSION_CNT" ;;
   }
 
   measure: user_id {
-    type: sum
+    type: number
     sql: ${TABLE}."USER_ID" ;;
   }
 
-  measure: session_id {
-    type: sum
+  dimension: session_id {
+    type: number
     sql: ${TABLE}."SESSION_ID" ;;
   }
 
@@ -126,6 +126,10 @@ view: customer_journey {
   measure: sessions {
     type: count_distinct
     sql: ${TABLE}."SESSION_ID" ;;
+  }
+  dimension: product {
+    type: string
+    sql: ${TABLE}."Product" ;;
   }
 
   set: detail {
