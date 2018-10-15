@@ -1,6 +1,7 @@
 view: customer_journey_path {
   derived_table: {
-    sql: with x as (
+    sql:
+with x as (
   --Customer Journey
   select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
       , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
@@ -13,7 +14,8 @@ view: customer_journey_path {
   and (p.dollars > 0 or p.dollars is null)
 ),
 zza as(
-select x.user_id, case when a.path = '/' then a.title else a.path end as path, a.time, a.landing_page, x.session_id, row_number() over (partition by a.user_id,a.session_id order by a.time) as event_number
+select x.user_id, case when a.path = '/' then a.title
+  when a.path like '%checkout%' then 'Checkout' else a.path end as path, a.time, a.landing_page, x.session_id, row_number() over (partition by a.user_id,a.session_id order by a.time) as event_number
 from x
 left join analytics.heap.pageviews a on x.user_id = a.user_id and x.session_id = a.session_id
 where purchase_flag = 'PURCHASE'),

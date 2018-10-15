@@ -72,7 +72,7 @@ select avg(avg_repeat_purchase) avg_repeat_purchase, sum(total_purchases) total_
          when lower(referrer) like '%outbrain%' then 'OUTBRAIN'
          when referrer is null then null
          else 'OTHER' end initial_referrer
-, avg_dollars
+, avg(avg_dollars) avg_dollars
 from xdd
 group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%goog%' then 'GOOGLE'
@@ -99,12 +99,12 @@ group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
   }
 
   measure: avg_repeat_purchase {
-    type: sum
+    type: average
     sql: ${TABLE}."AVG_REPEAT_PURCHASE" ;;
   }
 
   measure: total_purchases {
-    type: number
+    type: sum
     sql: ${TABLE}."TOTAL_PURCHASES" ;;
   }
 
