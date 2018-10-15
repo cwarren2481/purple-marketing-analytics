@@ -126,6 +126,11 @@ view: customer_journey_first_purchase {
     sql: ${TABLE}."PAGEVIEWS" ;;
   }
 
+  dimension: product {
+    type: string
+    sql: ${TABLE}."product" ;;
+  }
+
   set: detail {
     fields: [
       session_cnt,
@@ -142,7 +147,8 @@ view: customer_journey_first_purchase {
       first_purchase_time,
       num_purchases,
       num_sessions,
-      page_views
+      page_views,
+      product
     ]
   }
 }

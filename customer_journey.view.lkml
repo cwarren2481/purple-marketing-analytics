@@ -129,7 +129,7 @@ view: customer_journey {
   }
   dimension: product {
     type: string
-    sql: ${TABLE}."Product" ;;
+    sql: ${TABLE}."product" ;;
   }
 
   set: detail {
@@ -147,7 +147,8 @@ view: customer_journey {
       purchase_time_time,
       first_purchase_time,
       num_purchases,
-      pageviews
+      pageviews,
+      product
     ]
   }
 }
