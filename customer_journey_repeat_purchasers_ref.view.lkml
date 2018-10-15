@@ -37,11 +37,11 @@ select user_id
   , dollars
 from xbb
 where num_purchases > 1
-group by landing_page, referrer, user_id, dollars, product)
+group by landing_page, referrer, user_id, dollars)
 
 , xdd as (
     --avg repeat_purchase with total_purchases by filtered referrer
-select avg(repeat_purchase) avg_repeat_purchase, a.total_purchases, xcc.referrer, round(avg(dollars)) as avg_dollars, product
+select avg(repeat_purchase) avg_repeat_purchase, a.total_purchases, xcc.referrer, round(avg(dollars)) as avg_dollars
 from xcc
 left join (select count(purchase_flag) total_purchases, referrer
            from x group by referrer, purchase_flag
