@@ -23,7 +23,7 @@ left join analytics.heap.pageviews a
   and x.session_id = a.session_id
 where purchase_flag = 'PURCHASE')
 , zzd as (
-SELECT user_id, zza.product
+SELECT user_id
                 ,session_id
                 ,MAX(CASE
                                 WHEN event_number = 1
@@ -51,9 +51,9 @@ SELECT user_id, zza.product
                                 ELSE NULL
                     END) as e5
                     from zza
-         group by user_id, session_id, zza.product)
+         group by user_id, session_id)
 
-select count(session_id) as occurences, zzd.product, E1, E2, E3, E4, E5 from zzd
+select count(session_id) as occurences, E1, E2, E3, E4, E5 from zzd
 group by E1, E2, E3, E4, E5
 order by occurences desc
 
