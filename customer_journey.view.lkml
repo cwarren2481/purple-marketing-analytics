@@ -53,23 +53,23 @@ view: customer_journey {
     drill_fields: [detail*]
   }
 
-  dimension: session_cnt {
-    type: number
+  measure: session_cnt {
+    type: sum
     sql: ${TABLE}."SESSION_CNT" ;;
   }
 
-  dimension: purchase_session_cnt {
-    type: number
+  measure: purchase_session_cnt {
+    type: sum
     sql: ${TABLE}."PURCHASE_SESSION_CNT" ;;
   }
 
-  dimension: user_id {
-    type: number
+  measure: user_id {
+    type: sum
     sql: ${TABLE}."USER_ID" ;;
   }
 
-  dimension: session_id {
-    type: number
+  measure: session_id {
+    type: sum
     sql: ${TABLE}."SESSION_ID" ;;
   }
 
