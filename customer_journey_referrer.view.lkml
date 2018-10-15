@@ -31,12 +31,12 @@ left join (select session_id,user_id,count(time) as pageviews from analytics.hea
 on xaa.user_id = d.user_id and xaa.session_id = d.session_id
 ),
 xff as(
-select count(distinct session_cnt) num_sessions, avg(pageviews) avg_views_sess,user_id, landing_page, referrer, product
+select count(distinct session_cnt) num_sessions, avg(pageviews) avg_views_sess,user_id, landing_page, referrer
 from xbb
 where time <= first_purchase
-group by landing_page, referrer, user_id, product)
+group by landing_page, referrer, user_id)
 
-, xee as (select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,  xff.referrer, xff.product
+, xee as (select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,  xff.referrer
           from xff
 left join (select count(session_id) total_sessions, referrer from x group by referrer) a
 on xff.referrer = a.referrer
