@@ -128,7 +128,7 @@ view: customer_journey_first_purchase {
 
   dimension: product {
     type: string
-    sql: ${TABLE}."product" ;;
+    sql: ${TABLE}."PRODUCT" ;;
   }
 
   set: detail {
