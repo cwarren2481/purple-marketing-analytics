@@ -12,7 +12,7 @@ view: page_views_analysis {
   }
 
   measure: page_count {
-    type: number
+    type: sum
     sql: ${TABLE}."PAGE_COUNT" ;;
   }
 

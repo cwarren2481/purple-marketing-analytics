@@ -42,7 +42,7 @@ where xff.referrer not like '%purple.com%'
 group by xff.referrer, a.total_sessions
 order by total_sessions desc)
 
-select avg_num_sessions, avg_views_per_session, total_sessions
+select avg(avg_num_sessions) avg_num_sessions, avg_views_per_session, total_sessions
 , case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%goog%' then 'GOOGLE'
          when lower(referrer) like '%fb%' then 'FACEBOOK'
@@ -69,7 +69,7 @@ from xee
   }
 
   measure: avg_num_sessions {
-    type: sum
+    type: average
     sql: ${TABLE}."AVG_NUM_SESSIONS" ;;
   }
 
