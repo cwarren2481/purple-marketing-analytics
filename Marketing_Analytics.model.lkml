@@ -48,3 +48,8 @@ explore: page_views_analysis {
   label: "Page Views Analysis"
   description: "How many times were pages viewed?"
 }
+explore: customer_journey_repeat_purchases_product {
+  group_label: "Marketing analytics"
+  label: "Repeat Purchase Analysis Product"
+  description: "Repeat Purchases by Product"
+}
