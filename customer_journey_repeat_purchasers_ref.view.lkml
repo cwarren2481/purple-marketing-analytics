@@ -108,7 +108,7 @@ group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
     sql: ${TABLE}."TOTAL_PURCHASES" ;;
   }
 
-  measure: avg_dollars {
+  measure: Average_Order_Size {
     type: average
     value_format:"$#.00;($#.00)"
     sql: ${TABLE}."AVG_DOLLARS" ;;
@@ -121,6 +121,6 @@ group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
 
 
   set: detail {
-    fields: [avg_repeat_purchase, total_purchases, avg_dollars, initial_referrer]
+    fields: [avg_repeat_purchase, total_purchases, Average_Order_Size, initial_referrer]
   }
 }

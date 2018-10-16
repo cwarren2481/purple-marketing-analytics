@@ -66,7 +66,7 @@ having avg_repeat_purchase > 0
     sql: ${TABLE}."TOTAL_PURCHASES" ;;
   }
 
-  measure: avg_dollars {
+  measure: Average_Order_Size{
     type: average
     value_format:"$#.00;($#.00)"
     sql: ${TABLE}."AVG_DOLLARS" ;;
@@ -79,6 +79,6 @@ having avg_repeat_purchase > 0
 
 
   set: detail {
-    fields: [avg_repeat_purchase, total_purchases, avg_dollars, landing_page]
+    fields: [avg_repeat_purchase, total_purchases, Average_Order_Size, landing_page]
   }
 }
