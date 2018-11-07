@@ -11,7 +11,6 @@ view: customer_journey_landing_page{
         and s.session_id = p.session_id
         where s.user_id in (select distinct user_id from analytics.HEAP.purchase)
         and (p.dollars > 0 or p.dollars is null)
-        and time between '2018-01-01' and CURRENT_DATE
       ),
       xcs as(
       select row_number() over (partition by user_id order by time) session_cnt
@@ -32,11 +31,13 @@ view: customer_journey_landing_page{
       on xaa.user_id = d.user_id and xaa.session_id = d.session_id
       ),
       xff as(
-      select count(distinct session_cnt) num_sessions, avg(pageviews) avg_views_sess,user_id, landing_page, referrer from xbb
+      select count(distinct session_cnt) num_sessions, avg(pageviews) avg_views_sess,user_id, landing_page, referrer
+      from xbb
       where time <= first_purchase
       group by landing_page, referrer, user_id)
 
-      select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,  xff.landing_page from xff
+      select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,  xff.landing_page
+      from xff
       left join (select count(session_id) total_sessions, landing_page from x group by landing_page) a
       on xff.landing_page = a.landing_page
       group by xff.landing_page, a.total_sessions
@@ -68,6 +69,9 @@ view: customer_journey_landing_page{
     type: string
     sql: ${TABLE}."LANDING_PAGE" ;;
   }
+
+
+
 
   set: detail {
     fields: [avg_num_sessions, avg_views_per_session, total_sessions, landing_page]

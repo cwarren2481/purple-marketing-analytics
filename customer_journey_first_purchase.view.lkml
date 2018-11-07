@@ -112,6 +112,7 @@ view: customer_journey_first_purchase {
     sql: ${TABLE}."PAGEVIEWS" ;;
   }
 
+
   set: detail {
     fields: [
       session_cnt,

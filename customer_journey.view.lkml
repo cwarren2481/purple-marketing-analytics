@@ -34,8 +34,8 @@ view: customer_journey {
        ;;
   }
 
-  measure: count {
-    type: count
+ dimension: count {
+    type: number
     drill_fields: [detail*]
   }
 
@@ -49,7 +49,7 @@ view: customer_journey {
     sql: ${TABLE}."PURCHASE_SESSION_CNT" ;;
   }
 
-  dimension: user_id {
+  measure: user_id {
     type: number
     sql: ${TABLE}."USER_ID" ;;
   }
@@ -113,6 +113,7 @@ view: customer_journey {
     type: count_distinct
     sql: ${TABLE}."SESSION_ID" ;;
   }
+
 
   set: detail {
     fields: [

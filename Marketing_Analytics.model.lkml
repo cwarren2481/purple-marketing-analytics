@@ -48,5 +48,15 @@ explore: customer_journey_repeat_purchasers_ref {
   hidden: yes
   group_label: "Marketing analytics"
   label: "Repeat Purchase Analysis Ref"
-  description: "Repeat Purchases by referrer"
+  description: "Repeat Purchases by Referrer"
+}
+explore: page_views_analysis {
+  group_label: "Marketing analytics"
+  label: "Page Views Analysis"
+  description: "How many times were pages viewed?"
+}
+explore: customer_journey_repeat_purchases_product {
+  group_label: "Marketing analytics"
+  label: "Repeat Purchase Analysis Product"
+  description: "Repeat Purchases by Product"
 }

@@ -1,9 +1,8 @@
-view: customer_journey_repeat_purchasers_ref {
+view: customer_journey_referrer {
   derived_table: {
     sql: with x as (
         --Customer Journey
         select s.user_id, s.session_id, s.time, s.referrer, s.landing_page, s.utm_campaign
-            , row_number() over(partition by s.user_id order by time) as session_number
             , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
             , p.dollars
         from analytics.HEAP.sessions s
@@ -13,48 +12,40 @@ view: customer_journey_repeat_purchasers_ref {
         where s.user_id in (select distinct user_id from analytics.HEAP.purchase)
         and (p.dollars > 0 or p.dollars is null))
 
-, xaa as (
-    -- count purchases
-select case when purchase_flag = 'PURCHASE' then row_number() over (partition by user_id, purchase_flag order by time) end purchase_session_cnt
+, xcs as(
+select row_number() over (partition by user_id order by time) session_cnt
+    , case when purchase_flag = 'PURCHASE' then row_number() over (partition by user_id, purchase_flag order by time) end purchase_session_cnt
     , x.*
-from x
-where purchase_flag = 'PURCHASE')
-
-, xbb as (
-    -- number of purchases
-select xaa.*
-  , z.num_purchases
-from xaa
-left join (select user_id, count(distinct purchase_session_cnt) num_purchases from xaa group by user_id) z
-on xaa.user_id = z.user_id)
-
-, xcc as (
-    -- count repeat_purchase by referrer
-select user_id
-  , count(case when num_purchases > 1 then landing_page end) repeat_purchase
-  , landing_page
-  , referrer
-  , dollars
+from x),
+xaa as(
+select xcs.*, case when purchase_flag = 'PURCHASE' and purchase_session_cnt = 1 then time else NULL end as purchase_time from xcs),
+xbb as(
+select xaa.*, b.first_purchase, c.num_purchases, d.pageviews from xaa
+left join (select distinct user_id, min(purchase_time) first_purchase from xaa
+          group by user_id) b
+on xaa.user_id = b.user_id
+left join (select user_id, count(distinct purchase_session_cnt) num_purchases from xaa
+          group by user_id) c
+on xaa.user_id = c.user_id
+left join (select session_id,user_id,count(time) as pageviews from analytics.heap.pageviews group by session_id, user_id) d
+on xaa.user_id = d.user_id and xaa.session_id = d.session_id
+),
+xff as(
+select count(distinct session_cnt) num_sessions, avg(pageviews) avg_views_sess,user_id, landing_page, referrer
 from xbb
-where num_purchases > 1
-group by landing_page, referrer, user_id, dollars)
+where time <= first_purchase
+group by landing_page, referrer, user_id)
 
-, xdd as (
-    --avg repeat_purchase with total_purchases by filtered referrer
-select avg(repeat_purchase) avg_repeat_purchase, a.total_purchases, xcc.referrer, round(avg(dollars)) as avg_dollars
-from xcc
-left join (select count(purchase_flag) total_purchases, referrer
-           from x group by referrer, purchase_flag
-           having purchase_flag = 'PURCHASE') a
-on a.referrer = xcc.referrer
-left join (select user_id, referrer
-         from x where session_number = 1) as b
-on xcc.user_id = b.user_id
-group by xcc.referrer, a.total_purchases
-having avg_repeat_purchase > 0
-order by 2 desc)
+, xee as (select avg(num_sessions) avg_num_sessions,avg(avg_views_sess) avg_views_per_session, a.total_sessions,  xff.referrer
+          from xff
+left join (select count(session_id) total_sessions, referrer from x group by referrer) a
+on xff.referrer = a.referrer
+where xff.referrer not like '%purple.com%'
+group by xff.referrer, a.total_sessions
+order by total_sessions desc)
 
-select avg(avg_repeat_purchase) avg_repeat_purchase, sum(total_purchases) total_purchases
+select avg(avg_num_sessions) avg_num_sessions, avg(avg_views_per_session) avg_views_per_session, sum(total_sessions) total_sessions
+
 , case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%goog%' then 'GOOGLE'
          when lower(referrer) like '%fb%' then 'FACEBOOK'
@@ -71,9 +62,8 @@ select avg(avg_repeat_purchase) avg_repeat_purchase, sum(total_purchases) total_
          when lower(referrer) like '%outbrain%' then 'OUTBRAIN'
          when referrer is null then null
          else 'OTHER' end initial_referrer
-, avg(avg_dollars) avg_dollars
-from xdd
-group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
+from xee
+group by  case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%goog%' then 'GOOGLE'
          when lower(referrer) like '%fb%' then 'FACEBOOK'
          when lower(referrer) like '%faceb%' then 'FACEBOOK'
@@ -89,8 +79,7 @@ group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
          when lower(referrer) like '%outbrain%' then 'OUTBRAIN'
          when referrer is null then null
          else 'OTHER' end
-
-       ;;
+  ;;
   }
 
   measure: count {
@@ -98,20 +87,19 @@ group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
     drill_fields: [detail*]
   }
 
-  measure: avg_repeat_purchase {
+  measure: avg_num_sessions {
     type: average
-    sql: ${TABLE}."AVG_REPEAT_PURCHASE" ;;
+    sql: ${TABLE}."AVG_NUM_SESSIONS" ;;
   }
 
-  measure: total_purchases {
+  measure: avg_views_per_session {
     type: sum
-    sql: ${TABLE}."TOTAL_PURCHASES" ;;
+    sql: ${TABLE}."AVG_VIEWS_PER_SESSION" ;;
   }
 
-  measure: Average_Order_Size {
-    type: average
-    value_format:"$#.00;($#.00)"
-    sql: ${TABLE}."AVG_DOLLARS" ;;
+  measure: total_sessions {
+    type: sum
+    sql: ${TABLE}."TOTAL_SESSIONS" ;;
   }
 
   dimension: initial_referrer {
@@ -119,8 +107,7 @@ group by case when lower(referrer) like '%purple.com%' then 'PURPLE'
     sql: ${TABLE}."INITIAL_REFERRER" ;;
   }
 
-
   set: detail {
-    fields: [avg_repeat_purchase, total_purchases, Average_Order_Size, initial_referrer]
+    fields: [avg_num_sessions, avg_views_per_session, total_sessions, initial_referrer]
   }
 }
