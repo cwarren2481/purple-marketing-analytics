@@ -53,3 +53,8 @@ explore: customer_journey_repeat_purchases_product {
   label: "Repeat Purchase Analysis Product"
   description: "Repeat Purchases by Product"
 }
+explore: 30_day_attributions {
+  group_label: "Marketing analytics"
+  label: "30 Day Attributions"
+  description: "Total 30 day touch per campaign"
+}
