@@ -26,7 +26,7 @@ and (p.dollars > 0 or p.dollars is null))
         from b
         group by session_id, user_id, utm_campaign, purchase_flag, amount, date, session_cnt)
 
-select a.date, a.campaign_name, a.platform as channel, a.spend, a.clicks, a.impressions
+select a.date, a.campaign_name, a.platform, a.spend, a.clicks, a.impressions
 , sum(d.thirty_day_any_touch) as thirty_day_any_touch
 , sum(d.thirty_day_first_touch) as thirty_day_first_touch
 , sum (d.thirty_day_last_touch) as thirty_day_last_touch
@@ -65,6 +65,11 @@ group by a.date, a.campaign_name, a.platform, a.spend, a.clicks, a.impressions
     sql: ${TABLE}."CAMPAIGN_NAME" ;;
   }
 
+  dimension:  platform {
+    type: string
+    sql: ${TABLE}."PLATFORM" ;;
+  }
+
   measure: spend {
     type: sum
     sql: ${TABLE}."SPEND" ;;
@@ -99,6 +104,7 @@ group by a.date, a.campaign_name, a.platform, a.spend, a.clicks, a.impressions
     fields: [
       date,
       campaign_name,
+      platform,
       spend,
       clicks,
       impressions,
