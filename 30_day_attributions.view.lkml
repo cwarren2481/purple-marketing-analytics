@@ -66,32 +66,32 @@ group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions
   }
 
   measure: spend {
-    type: number
+    type: sum
     sql: ${TABLE}."SPEND" ;;
   }
 
   measure: clicks {
-    type: number
+    type: sum
     sql: ${TABLE}."CLICKS" ;;
   }
 
   measure: impressions {
-    type: number
+    type: sum
     sql: ${TABLE}."IMPRESSIONS" ;;
   }
 
   measure: thirty_day_any_touch {
-    type: number
+    type: sum
     sql: ${TABLE}."THIRTY_DAY_ANY_TOUCH" ;;
   }
 
   measure: thirty_day_first_touch {
-    type: number
+    type: sum
     sql: ${TABLE}."THIRTY_DAY_FIRST_TOUCH" ;;
   }
 
   measure: thirty_day_last_touch {
-    type: number
+    type: sum
     sql: ${TABLE}."THIRTY_DAY_LAST_TOUCH" ;;
   }
 
