@@ -1,11 +1,11 @@
 view: 30_day_attributions {
   derived_table: {
-    sql: with a as (select date, campaign_name, platform
+    sql: with a as (select date, campaign_name
       , sum(spend) as spend
       , sum(impressions) as impressions
       , sum(clicks) as clicks
       from analytics.marketing.adspend
-      group by campaign_name, date, platform)
+      group by campaign_name, date)
 
 , b as (
   select se.session_id, se.user_id, se.utm_campaign
@@ -20,34 +20,26 @@ and se.session_id = p.session_id
 where se.user_id in (select distinct user_id from analytics.heap.purchase where time >= '2018-10-15')
 and (p.dollars > 0 or p.dollars is null))
 
-, c as (
-  select b.*
-        , first_value(session_cnt) over (partition by user_id order by date) as first_value
-        from b
-        group by session_id, user_id, utm_campaign, purchase_flag, amount, date, session_cnt)
-
-select a.date, a.campaign_name, a.spend, a.clicks, a.impressions
+select d.user_id, a.date, a.campaign_name, a.spend, a.clicks, a.impressions
 , sum(d.thirty_day_any_touch) as thirty_day_any_touch
 , sum(d.thirty_day_first_touch) as thirty_day_first_touch
 , sum (d.thirty_day_last_touch) as thirty_day_last_touch
 from a
 
-left join (select c.date, c.user_id, c.session_id, c.utm_campaign, c.purchase_flag, c.amount
-, sum(c2.amount) as thirty_day_any_touch
-, sum(case when c.session_cnt = c.first_value then c2.amount end) thirty_day_first_touch
-, sum(case when c.amount is not null and c.session_cnt <> '1' then c2.amount end) thirty_day_last_touch
-from c
-left join c as c2
-on c.user_id = c2.user_id
-and c.date between c2.date and dateadd(day,30,c2.date)
-group by c.date, c.user_id, c.session_id, c.utm_campaign, c.purchase_flag, c.amount) d
+left join (select b.date, b.user_id, b.session_id, b.utm_campaign, b.purchase_flag, b.amount
+, sum(b2.amount) as thirty_day_any_touch
+, sum(case when b.session_cnt ='1' then b2.amount end) thirty_day_first_touch
+, sum(case when b.amount is not null and b.session_cnt <> '1' then b2.amount end) thirty_day_last_touch
+from b
+left join b as b2
+on b.user_id = b2.user_id
+and b2.date between b.date and dateadd(day,30,b.date)
+group by b.date, b.user_id, b.session_id, b.utm_campaign, b.purchase_flag, b.amount) d
 
 on d.utm_campaign = a.campaign_name
 and d.date = a.date
-where a.date >= '2018-10-15'
-and a.campaign_name is not null
-and thirty_day_any_touch is not null
-group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions
+where thirty_day_any_touch is not null
+group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions, d.user_id
  ;;
   }
 
