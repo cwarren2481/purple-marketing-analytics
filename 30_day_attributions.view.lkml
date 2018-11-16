@@ -75,16 +75,19 @@ group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions
 
   measure: roi_any_touch {
     type: sum
+    value_format: "0.##"
     sql: ${TABLE}."ROI_ANY_TOUCH" ;;
   }
 
   measure: roi_first_touch {
     type: sum
+    value_format: "0.##"
     sql: ${TABLE}."ROI_FIRST_TOUCH" ;;
   }
 
   measure: roi_last_touch {
     type: sum
+    value_format: "0.##"
     sql: ${TABLE}."ROI_LAST_TOUCH" ;;
   }
 
