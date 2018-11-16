@@ -65,32 +65,32 @@ group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions
     sql: ${TABLE}."CAMPAIGN_NAME" ;;
   }
 
-  dimension: spend {
+  measure: spend {
     type: number
     sql: ${TABLE}."SPEND" ;;
   }
 
-  dimension: clicks {
+  measure: clicks {
     type: number
     sql: ${TABLE}."CLICKS" ;;
   }
 
-  dimension: impressions {
+  measure: impressions {
     type: number
     sql: ${TABLE}."IMPRESSIONS" ;;
   }
 
-  dimension: thirty_day_any_touch {
+  measure: thirty_day_any_touch {
     type: number
     sql: ${TABLE}."THIRTY_DAY_ANY_TOUCH" ;;
   }
 
-  dimension: thirty_day_first_touch {
+  measure: thirty_day_first_touch {
     type: number
     sql: ${TABLE}."THIRTY_DAY_FIRST_TOUCH" ;;
   }
 
-  dimension: thirty_day_last_touch {
+  measure: thirty_day_last_touch {
     type: number
     sql: ${TABLE}."THIRTY_DAY_LAST_TOUCH" ;;
   }
