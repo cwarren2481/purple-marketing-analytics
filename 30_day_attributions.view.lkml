@@ -22,8 +22,11 @@ and (p.dollars > 0 or p.dollars is null))
 
 select d.user_id, a.date, a.campaign_name, a.spend, a.clicks, a.impressions
 , sum(d.thirty_day_any_touch) as thirty_day_any_touch
+, (thirty_day_any_touch / a.spend) as ROI_ANY_TOUCH
 , sum(d.thirty_day_first_touch) as thirty_day_first_touch
+, (thirty_day_first_touch / a.spend) as ROI_FIRST_TOUCH
 , sum (d.thirty_day_last_touch) as thirty_day_last_touch
+, (thirty_day_last_touch / a.spend) as ROI_LAST_TOUCH
 from a
 
 left join (select b.date, b.user_id, b.session_id, b.utm_campaign, b.purchase_flag, b.amount
@@ -38,8 +41,9 @@ group by b.date, b.user_id, b.session_id, b.utm_campaign, b.purchase_flag, b.amo
 
 on d.utm_campaign = a.campaign_name
 and d.date = a.date
-where thirty_day_any_touch is not null
-group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions, d.user_id
+where a.date >= '2018-10-15'
+group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions
+, d.user_id, d.thirty_day_any_touch, d.thirty_day_first_touch, d.thirty_day_last_touch
  ;;
   }
 
@@ -67,6 +71,21 @@ group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions, d.user_id
   measure: clicks {
     type: sum
     sql: ${TABLE}."CLICKS" ;;
+  }
+
+  measure: roi_any_touch {
+    type: sum
+    sql: ${TABLE}."ROI_ANY_TOUCH" ;;
+  }
+
+  measure: roi_first_touch {
+    type: sum
+    sql: ${TABLE}."ROI_FIRST_TOUCH" ;;
+  }
+
+  measure: roi_last_touch {
+    type: sum
+    sql: ${TABLE}."ROI_LAST_TOUCH" ;;
   }
 
   measure: impressions {
