@@ -55,6 +55,6 @@ explore: customer_journey_repeat_purchases_product {
 }
 explore: 30_day_attributions {
   group_label: "Marketing analytics"
-  label: "30 Day Attributions"
+  label: "Attribution"
   description: "Total 30 day touch per campaign"
 }
