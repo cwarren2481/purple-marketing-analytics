@@ -72,7 +72,7 @@ group by a.date, a.campaign_name, a.platform, a.spend, a.clicks, a.impressions
 
   measure: spend {
     type: sum
-    value_format: "$#.00;($#.00)"
+    value_format: "$#,##0.00"
     sql: ${TABLE}."SPEND" ;;
   }
 
@@ -88,19 +88,19 @@ group by a.date, a.campaign_name, a.platform, a.spend, a.clicks, a.impressions
 
   measure: thirty_day_any_touch {
     type: sum
-    value_format: "$#.00;($#.00)"
+    value_format: "$#,##0.00"
     sql: ${TABLE}."THIRTY_DAY_ANY_TOUCH" ;;
   }
 
   measure: thirty_day_first_touch {
     type: sum
-    value_format: "$#.00;($#.00)"
+    value_format: "$#,##0.00"
     sql: ${TABLE}."THIRTY_DAY_FIRST_TOUCH" ;;
   }
 
   measure: thirty_day_last_touch {
     type: sum
-    value_format: "$#.00;($#.00)"
+    value_format: "$#,##0.00"
     sql: ${TABLE}."THIRTY_DAY_LAST_TOUCH" ;;
   }
 
