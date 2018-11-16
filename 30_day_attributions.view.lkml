@@ -1,11 +1,11 @@
 view: 30_day_attributions {
   derived_table: {
-    sql: with a as (select date, campaign_name
+    sql: with a as (select date, campaign_name, platform
       , sum(spend) as spend
       , sum(impressions) as impressions
       , sum(clicks) as clicks
       from analytics.marketing.adspend
-      group by campaign_name, date)
+      group by campaign_name, date, platform)
 
 , b as (
   select se.session_id, se.user_id, se.utm_campaign
@@ -26,7 +26,7 @@ and (p.dollars > 0 or p.dollars is null))
         from b
         group by session_id, user_id, utm_campaign, purchase_flag, amount, date, session_cnt)
 
-select a.date, a.campaign_name, a.spend, a.clicks, a.impressions
+select a.date, a.campaign_name, a.platform as channel, a.spend, a.clicks, a.impressions
 , sum(d.thirty_day_any_touch) as thirty_day_any_touch
 , sum(d.thirty_day_first_touch) as thirty_day_first_touch
 , sum (d.thirty_day_last_touch) as thirty_day_last_touch
@@ -46,7 +46,7 @@ on d.utm_campaign = a.campaign_name
 and d.date = a.date
 where a.date >= '2018-10-15'
 and a.campaign_name is not null
-group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions
+group by a.date, a.campaign_name, a.platform, a.spend, a.clicks, a.impressions
  ;;
   }
 
