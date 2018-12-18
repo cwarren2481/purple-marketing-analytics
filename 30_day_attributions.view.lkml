@@ -95,21 +95,21 @@ and thirty_day_any_touch is not null
 
   measure: roi_any_touch {
     type: number
-    value_format: "$#,##0"
+    value_format: "0.###"
     sql: ${thirty_day_any_touch} / NULLIF(${spend}, 0) ;;
 
   }
 
   measure: roi_first_touch {
     type: number
-    value_format: "$#,##0"
+    value_format: "0.###"
     sql: ${thirty_day_first_touch} / NULLIF(${spend}, 0) ;;
 
   }
 
   measure: roi_last_touch {
     type: number
-    value_format: "$#,##0"
+    value_format: "0.###"
     sql: ${thirty_day_last_touch} / NULLIF(${spend}, 0) ;;
 
 
