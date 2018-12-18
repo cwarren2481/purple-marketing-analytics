@@ -28,11 +28,11 @@ select date, session_id, user_id, campaign_name, purchase_flag, amount
 from e
 )
 select a.date, a.campaign_name, a.spend, a.clicks, a.impressions
-, sum(d.thirty_day_any_touch) as thirty_day_any_touch
+, d.thirty_day_any_touch as thirty_day_any_touch
 , (thirty_day_any_touch / a.spend) as ROI_ANY_TOUCH
-, sum(d.thirty_day_first_touch) as thirty_day_first_touch
+, d.thirty_day_first_touch as thirty_day_first_touch
 , (thirty_day_first_touch / a.spend) as ROI_FIRST_TOUCH
-, sum (d.thirty_day_last_touch) as thirty_day_last_touch
+, d.thirty_day_last_touch as thirty_day_last_touch
 , (thirty_day_last_touch / a.spend) as ROI_LAST_TOUCH
 from a
 left join (select b.date, b.user_id, b.session_id, b.campaign_name, b.purchase_flag, b.amount
