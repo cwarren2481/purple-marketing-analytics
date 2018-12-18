@@ -21,9 +21,6 @@ view: 30_day_attributions {
     and s.session_id = p.session_id
     where s.user_id in (select distinct user_id from analytics.heap.purchase where time >= '2018-10-15')
     and (p.dollars > 0 or p.dollars is null)
-  and campaign_name is not null
-  and internal_campaign_id is not null
-  and external_campaign_id is not null
 )
 , b as (
 select date, session_id, user_id, campaign_name, purchase_flag, amount
@@ -53,8 +50,7 @@ where a.date >= '2018-10-15'
 and clicks > 0
 and thirty_day_any_touch is not null
 group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions
-, d.user_id, d.thirty_day_any_touch, d.thirty_day_first_touch, d.thirty_day_last_touch
-order by clicks;;
+, d.user_id, d.thirty_day_any_touch, d.thirty_day_first_touch, d.thirty_day_last_touch;;
   }
 
   measure: count {
