@@ -54,11 +54,6 @@ and thirty_day_any_touch is not null
     drill_fields: [detail*]
   }
 
-  dimension: date {
-    type: date
-    sql: ${TABLE}."DATE" ;;
-  }
-
   dimension: campaign_name {
     type: string
     sql: ${TABLE}."CAMPAIGN_NAME" ;;
@@ -73,24 +68,6 @@ and thirty_day_any_touch is not null
   measure: clicks {
     type: sum
     sql: ${TABLE}."CLICKS" ;;
-  }
-
-  measure: roi_any_touch {
-    type: sum
-    value_format: "#.0"
-    sql: ${TABLE}."ROI_ANY_TOUCH" ;;
-  }
-
-  measure: roi_first_touch {
-    type: sum
-    value_format: "#.0"
-    sql: ${TABLE}."ROI_FIRST_TOUCH" ;;
-  }
-
-  measure: roi_last_touch {
-    type: sum
-    value_format: "#.0"
-    sql: ${TABLE}."ROI_LAST_TOUCH" ;;
   }
 
   measure: impressions {
@@ -116,16 +93,36 @@ and thirty_day_any_touch is not null
     sql: ${TABLE}."THIRTY_DAY_LAST_TOUCH" ;;
   }
 
+  measure: roi_any_touch {
+    type: number
+    sql: ${thirty_day_any_touch} / NULLIF(${spend}, 0) ;;
+
+  }
+
+  measure: roi_first_touch {
+    type: number
+    sql: ${thirty_day_first_touch} / NULLIF(${spend}, 0) ;;
+
+  }
+
+  measure: roi_last_touch {
+    type: number
+    sql: ${thirty_day_last_touch} / NULLIF(${spend}, 0) ;;
+
+
+  }
   set: detail {
     fields: [
-      date,
       campaign_name,
       spend,
       clicks,
       impressions,
       thirty_day_any_touch,
       thirty_day_first_touch,
-      thirty_day_last_touch
+      thirty_day_last_touch,
+      roi_any_touch,
+      roi_first_touch,
+      roi_last_touch
     ]
   }
 }
