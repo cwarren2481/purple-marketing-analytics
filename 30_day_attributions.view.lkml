@@ -49,8 +49,7 @@ and d.date = a.date
 where a.date >= '2018-10-15'
 and clicks > 0
 and thirty_day_any_touch is not null
-group by a.date, a.campaign_name, a.spend, a.clicks, a.impressions
-, d.user_id, d.thirty_day_any_touch, d.thirty_day_first_touch, d.thirty_day_last_touch;;
+;;
   }
 
   measure: count {
