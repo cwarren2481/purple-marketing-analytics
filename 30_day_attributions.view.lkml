@@ -54,7 +54,7 @@ where a.date >= '2018-10-15'
 
   filter: date {
     type: date
-    required_fields: [campaign_name]
+    required_fields: [campaign_name, spend]
   }
 
   dimension: campaign_name {
