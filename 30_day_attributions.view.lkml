@@ -8,44 +8,47 @@ view: 30_day_attributions {
       from analytics.marketing.adspend
       group by campaign_name, date
 )
-, e as (
-  select distinct to_date(s.time) as date, s.session_id, s.user_id
+, b as (
+  select to_date(s.time) as date
+  , s.session_id
+  , s.user_id
+  , p.dollars as amount
 , case when s.utm_campaign = l.internal_campaign_id then l.campaign_name else s.utm_campaign end as campaign_name
 , case when p.user_id is not null then 'PURCHASE' else 'NON-PURCHASE' end purchase_flag
-, p.dollars as amount
+, row_number() over (partition by s.user_id order by to_date(s.time)) session_cnt
   from analytics.heap.sessions s
   left join analytics.utm_lookup.utm_campaign l
-  on l.internal_campaign_id = try_to_numeric(s.utm_campaign)
+  on s.utm_campaign = l.internal_campaign_id
   left join analytics.heap.purchase p
     on s.user_id = p.user_id
     and s.session_id = p.session_id
     where s.user_id in (select distinct user_id from analytics.heap.purchase where time >= '2018-10-15')
     and (p.dollars > 0 or p.dollars is null)
 )
-, b as (
-select date, session_id, user_id, campaign_name, purchase_flag, amount
-, row_number() over (partition by user_id order by date) session_cnt
-from e
+, c as (
+select b.campaign_name, b.date
+    , sum(b2.amount) as thirty_day_any_touch
+    , sum(case when b.session_cnt ='1' then b2.amount end) thirty_day_first_touch
+    , sum(case when b.amount is not null and b.session_cnt <> '1' then b2.amount end) thirty_day_last_touch
+    from b
+    left join b as b2
+    on b.user_id = b2.user_id
+    and b2.date between b.date and dateadd(day,30,b.date)
+    group by b.campaign_name, b.date
 )
-select a.date, a.campaign_name, a.spend, a.clicks, a.impressions
-, d.thirty_day_any_touch as thirty_day_any_touch
-, d.thirty_day_first_touch as thirty_day_first_touch
-, d.thirty_day_last_touch as thirty_day_last_touch
+select a.date
+, a.campaign_name
+, a.clicks
+, a.impressions
+, a.spend as spend
+, thirty_day_any_touch
+, thirty_day_first_touch
+, thirty_day_last_touch
 from a
-left join (select b.date, b.user_id, b.session_id, b.campaign_name, b.purchase_flag, b.amount
-, sum(b2.amount) as thirty_day_any_touch
-, sum(case when b.session_cnt ='1' then b2.amount end) thirty_day_first_touch
-, sum(case when b.amount is not null and b.session_cnt <> '1' then b2.amount end) thirty_day_last_touch
-from b
-left join b as b2
-on b.user_id = b2.user_id
-and b2.date between b.date and dateadd(day,30,b.date)
-group by b.date, b.user_id, b.session_id, b.campaign_name, b.purchase_flag, b.amount) d
-on d.campaign_name = a.campaign_name
-and d.date = a.date
+left join c
+on c.campaign_name = a.campaign_name
+and c.date = a.date
 where a.date >= '2018-10-15'
-and clicks > 0
-and thirty_day_any_touch is not null
 ;;
   }
 
