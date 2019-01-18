@@ -52,8 +52,9 @@ where a.date >= '2018-10-15'
 ;;
   }
 
-  filter: date {
+  dimension: date {
     type: date
+    sql: ${TABLE}."DATE" ;;
   }
 
   dimension: campaign_name {
@@ -118,6 +119,7 @@ where a.date >= '2018-10-15'
   }
   set: detail {
     fields: [
+      date,
       campaign_name,
       spend,
       clicks,
