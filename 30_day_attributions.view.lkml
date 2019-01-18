@@ -52,9 +52,8 @@ where a.date >= '2018-10-15'
 ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [detail*]
+  filter: date {
+    type: date
   }
 
   dimension: campaign_name {
